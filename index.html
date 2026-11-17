@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SOBUSA · Data Challenge</title>
+<style>
+  :root { --fondo: #ffffff; --texto: #1f2328; --borde: #d0d7de; --activo: #2a78d6; --barra: #f6f8fa; }
+  @media (prefers-color-scheme: dark) {
+    :root { --fondo: #0d1117; --texto: #e6edf3; --borde: #30363d; --activo: #4c9be8; --barra: #161b22; }
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--fondo); color: var(--texto);
+               font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  body { display: flex; flex-direction: column; }
+  header { background: var(--barra); border-bottom: 1px solid var(--borde); padding: 10px 16px 0; }
+  h1 { font-size: 1.1rem; margin: 0 0 8px; }
+  nav { display: flex; gap: 4px; overflow-x: auto; }
+  nav button { background: none; border: 1px solid transparent; border-bottom: none; color: var(--texto);
+               padding: 8px 14px; font-size: 0.95rem; cursor: pointer; border-radius: 6px 6px 0 0; white-space: nowrap; }
+  nav button[aria-selected="true"] { background: var(--fondo); border-color: var(--borde); color: var(--activo);
+                                     font-weight: 600; margin-bottom: -1px; }
+  main { flex: 1; min-height: 0; }
+  iframe { width: 100%; height: 100%; border: 0; display: none; background: #fff; }
+  iframe.visible { display: block; }
+  .nota { font-size: 0.8rem; opacity: 0.75; margin: 0 0 8px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>SOBUSA · Data Challenge — notebooks ejecutados</h1>
+  <p class="nota">Los Entregables 1 y 2 completos, con todas sus salidas y figuras. La primera carga puede tardar unos segundos.</p>
+  <nav role="tablist">
+    <button role="tab" id="t1" aria-controls="e1" aria-selected="true">Entregable 1 · Módulos 1–8</button>
+    <button role="tab" id="t2" aria-controls="e2" aria-selected="false">Entregable 2 · e1c y Módulos 9–14</button>
+  </nav>
+</header>
+<main>
+  <iframe id="e1" class="visible" src="entregable1.html" title="Entregable 1"></iframe>
+  <iframe id="e2" data-src="entregable2.html" title="Entregable 2"></iframe>
+</main>
+<script>
+  const tabs = document.querySelectorAll('[role="tab"]');
+  function abrir(tab) {
+    tabs.forEach(t => {
+      const marco = document.getElementById(t.getAttribute('aria-controls'));
+      const activo = t === tab;
+      t.setAttribute('aria-selected', activo);
+      marco.classList.toggle('visible', activo);
+      if (activo && !marco.src && marco.dataset.src) marco.src = marco.dataset.src;   // carga el 2 solo al abrirlo
+    });
+    history.replaceState(null, '', '#' + tab.getAttribute('aria-controls'));
+  }
+  tabs.forEach(t => t.addEventListener('click', () => abrir(t)));
+  if (location.hash === '#e2') abrir(document.getElementById('t2'));
+</script>
+</body>
+</html>
